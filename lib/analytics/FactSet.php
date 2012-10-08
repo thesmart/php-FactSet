@@ -58,9 +58,33 @@ class FactSet {
 		$data	= array();
 
 		foreach ($this->factRecords as $record) {
-			$data[]	= $record;
+			$data[]	= $record->toArray();
 		}
 
 		return $data;
+	}
+
+	/**
+	 * From an array of FactSet data (see FactSet->toArray()), turn into a FactSet
+	 * @param array $data
+	 * @return FactSet
+	 */
+	public static function fromArray(array $data) {
+		if (empty($data)) {
+			return new FactSet(array(), array());
+		}
+
+		$first	= reset($data);
+		$set	= new FactSet(array_keys($first['dims']), array_keys($first['measures']));
+
+		foreach ($data as $recordData) {
+			$record = $set->newRecord($recordData['time']);
+			$record->dims		= $recordData['dims'];
+			$record->measures	= $recordData['measures'];
+			$record->getHash(true);
+			$set->insert($record);
+		}
+
+		return $set;
 	}
 }

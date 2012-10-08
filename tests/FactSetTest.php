@@ -49,5 +49,9 @@ class FactSetTest extends \PHPUnit_Framework_TestCase {
 		}
 
 		$this->assertEquals(200, $set->count());
+
+		$setArr = $set->toArray();
+		$setCopy = FactSet::fromArray($setArr);
+		$this->assertEquals($setArr, $setCopy->toArray());
 	}
 }
